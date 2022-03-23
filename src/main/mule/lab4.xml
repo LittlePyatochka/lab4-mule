@@ -1,13 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
 http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
-    <http:listener-config name="lab4-httpListenerConfig">
-        <http:listener-connection host="0.0.0.0" port="8081" />
-    </http:listener-config>
-    <apikit:config name="lab4-config" api="lab4.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
-    <wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="4b5346a2-70ce-4aeb-b069-d5a1b8bc1dca" >
-		<wsc:connection wsdlLocation="http://127.0.0.1:8091/service-oriented-architecture-actions-jaxrs-api/StarshipResource?wsdl" service="StarshipResourceService" port="StarshipResourcePort" address="http://localhost:8091/service-oriented-architecture-actions-jaxrs-api/StarshipResource" >
-			<wsc:web-service-security actor="http://schemas.xmlsoap.org/soap/actor/next" />
+	<http:listener-config
+		name="lab4-httpListenerConfig">
+		<http:listener-connection host="0.0.0.0"
+			port="8081" />
+		<http:listener-interceptors >
+			<http:cors-interceptor >
+				<http:origins >
+					<http:public-resource />
+				</http:origins>
+			</http:cors-interceptor>
+		</http:listener-interceptors>
+	</http:listener-config>
+	<apikit:config name="lab4-config" api="lab4.raml"
+		outboundHeadersMapName="outboundHeaders"
+		httpStatusVarName="httpStatus" />
+	<wsc:config name="Web_Service_Consumer_Config"
+		doc:name="Web Service Consumer Config"
+		doc:id="4b5346a2-70ce-4aeb-b069-d5a1b8bc1dca">
+		<wsc:connection
+			wsdlLocation="http://127.0.0.1:8091/service-oriented-architecture-actions-jaxrs-api/StarshipResource?wsdl"
+			service="StarshipResourceService" port="StarshipResourcePort"
+			address="http://localhost:8091/service-oriented-architecture-actions-jaxrs-api/StarshipResource">
+			<wsc:web-service-security
+				actor="http://schemas.xmlsoap.org/soap/actor/next" />
 		</wsc:connection>
 	</wsc:config>
 	<flow name="lab4-main">
@@ -155,7 +179,7 @@ output application/json
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/xml
-ns ns0 http://localhost:8090/StarshipResource
+ns ns0 http://localhost:8091/service-oriented-architecture-actions-jaxrs-api/StarshipResource
 ---
 {
 	ns0#putOnStarship: {
@@ -167,19 +191,14 @@ ns ns0 http://localhost:8090/StarshipResource
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="3fe02db6-b00c-4741-9f6e-faecf593b40c" />
 		<wsc:consume doc:name="Consume" doc:id="5c3fb2cf-8d0d-4a26-aad6-5f4b2a728fb7" config-ref="Web_Service_Consumer_Config" operation="putOnStarship"/>
 		<ee:transform doc:name="Transform Message" doc:id="1194994e-db17-4249-bd8e-fe0ad3c59d41" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
-ns ns0 http://localhost:8090/StarshipResource
+ns ns0 http://localhost:8091/service-oriented-architecture-actions-jaxrs-api/StarshipResource
 ---
-{
-	name: payload.body.ns0#putOnStarshipResponse.return.name,
-	totalParatroopers: payload.body.ns0#putOnStarshipResponse.return.totalParatroopers
-}
-]]></ee:set-payload>
+payload.body.ns0#putOnStarshipResponse.return.name]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<error-handler >
@@ -204,7 +223,7 @@ output application/json
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/xml
-ns ns0 http://localhost:8090/StarshipResource
+ns ns0 http://localhost:8091/service-oriented-architecture-actions-jaxrs-api/StarshipResource
 ---
 {
 	ns0#kickOutOfStarship: {
@@ -218,7 +237,7 @@ ns ns0 http://localhost:8090/StarshipResource
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
-ns ns0 http://localhost:8090/StarshipResource
+ns ns0 http://localhost:8091/service-oriented-architecture-actions-jaxrs-api/StarshipResource
 ---
 {
 	name: payload.body.ns0#kickOutOfStarshipResponse.return.name,
