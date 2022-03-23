@@ -198,11 +198,16 @@ ns ns0 http://localhost:8091/service-oriented-architecture-actions-jaxrs-api/Sta
 output application/json
 ns ns0 http://localhost:8091/service-oriented-architecture-actions-jaxrs-api/StarshipResource
 ---
-payload.body.ns0#putOnStarshipResponse.return.name]]></ee:set-payload>
+{
+	name: payload.body.ns0#putOnStarshipResponse.return.name,
+	totalParatroopers: payload.body.ns0#putOnStarshipResponse.return.totalParatroopers
+}
+]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<error-handler >
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="06a0931d-b2d1-4ff0-a6e1-578fecab59d6" type="WSC:SOAP_FAULT">
+				<set-variable value="400" doc:name="Set Variable" doc:id="e5cfd2f6-84cc-45dc-8d00-636b8d5f5322" variableName="httpStatus"/>
 				<ee:transform doc:name="Transform Message" doc:id="da9b4925-4af2-4916-affc-0058c6a18477" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
@@ -248,6 +253,7 @@ ns ns0 http://localhost:8091/service-oriented-architecture-actions-jaxrs-api/Sta
 		</ee:transform>
 		<error-handler >
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="Error Propagate" doc:id="91e83501-e5d3-40e7-ac44-b4f7aab1e4da" type="WSC:SOAP_FAULT" >
+				<set-variable value="400" doc:name="Set Variable" doc:id="8fa88634-2dd9-41b1-ba91-7ddb9c85cc53" variableName="httpStatus" />
 				<ee:transform doc:name="Transform Message" doc:id="39a9f3e7-8cff-487f-91f2-32ff0d525668" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
