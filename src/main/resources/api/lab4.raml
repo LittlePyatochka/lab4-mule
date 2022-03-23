@@ -4,10 +4,10 @@ mediaType:
   - application/xml
 protocols:
   - HTTP
-baseUri: /api/starship
+baseUri: /api
 version: "2.0"
-/{starship-id}/load/{space-marine-id}:
-  get:
+/starship/{starship-id}/load/{space-marine-id}:
+  post:
     displayName: Put Spase marine on Starship
     responses:
       "200":
@@ -32,8 +32,8 @@ version: "2.0"
     space-marine-id:
       example: 2
       type: number
-/{starship-id}/unload-all:
-  get:
+/starship/{starship-id}/unload-all:
+  post:
     displayName: Unload all Space marines
     responses:
       "200":
