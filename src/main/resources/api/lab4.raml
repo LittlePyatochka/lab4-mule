@@ -1,0 +1,57 @@
+#%RAML 1.0
+title: lab4
+mediaType:
+  - application/xml
+protocols:
+  - HTTP
+baseUri: /api/starship
+version: "2.0"
+/{starship-id}/load/{space-marine-id}:
+  get:
+    displayName: Put Spase marine on Starship
+    responses:
+      "200":
+        body:
+          type: object
+      "404":
+        body:
+          type: object
+      "400":
+        body:
+          type: object
+    securedBy: []
+  options:
+    displayName: Options
+    responses:
+      200: {}
+    securedBy: []
+  uriParameters:
+    starship-id:
+      example: 1
+      type: number
+    space-marine-id:
+      example: 2
+      type: number
+/{starship-id}/unload-all:
+  get:
+    displayName: Unload all Space marines
+    responses:
+      "200":
+        body:
+          type: object
+      "404":
+        body:
+          type: object
+      "400":
+        body:
+          type: object
+    securedBy: []
+  options:
+    displayName: Options
+    responses:
+      200: {}
+    securedBy: []
+  uriParameters:
+    starship-id:
+      example: 1
+      type: number
